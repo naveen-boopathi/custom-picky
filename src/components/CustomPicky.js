@@ -12,7 +12,18 @@ export default class CustomPicky extends Component {
         ],
         selectedItems: [],
         changedGroupName: '',
-        allSelected: 'none'
+    }
+    componentDidMount() {
+        if(this.props) {
+            const { options, selectedItems } = this.props
+            this.setState({options, selectedItems})
+        }
+    }
+    componentWillReceiveProps(nextProps, nextState) {
+        if (this.props !== nextProps) {
+            const { options, selectedItems } = nextProps
+            this.setState({options, selectedItems})
+        }
     }
     handleGroupSelect = (items, groupName, type) => {
         let { selectedItems, options } = this.state
@@ -32,11 +43,11 @@ export default class CustomPicky extends Component {
                         return { ...eachItem, checked: false }
                     }
                 })
-                return { ...eachOption, items: updatedItems }
+                return { ...eachOption, items: updatedItems, allSelected: type }
             }
             return { ...eachOption }
         })
-        this.setState({selectedItems, changedGroupName: groupName, options: updatedOptions, allSelected: type})
+        this.setState({selectedItems, changedGroupName: groupName, options: updatedOptions})
     }
     render() {
         return <Fragment>
@@ -57,7 +68,6 @@ export default class CustomPicky extends Component {
                             selectedItems={this.state.selectedItems}
                             onGroupSelect={this.handleGroupSelect}
                             changedGroupName={this.state.changedGroupName}
-                            allSelected={this.state.allSelected}
                         />
                     );
                 }}

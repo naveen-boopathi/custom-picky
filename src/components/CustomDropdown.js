@@ -1,25 +1,20 @@
 import React, { Component, Fragment } from 'react'
 
 export default class CustomDropdown extends Component {
-    constructor() {
-        super()
-        this.state = {
-            allSelected: 'none',
-            items: [],
-            groupName: ''
-        }
+    state = {
+        allSelected: 'none',
+        items: [],
+        groupName: ''
     }
     componentDidMount() {
         if (this.props.item) {
-            const { items, groupName } = this.props.item
-            const { allSelected } = this.props
+            const { items, groupName, allSelected } = this.props.item
             this.setState({ items, groupName, allSelected })
         }
     }
     componentWillReceiveProps(nextProps, nextState) {
         if (this.props.item !== nextProps.item && this.state.groupName === nextProps.changedGroupName) {
-            const { items, groupName } = nextProps.item
-            const { allSelected } = nextProps
+            const { items, groupName, allSelected } = nextProps.item
             this.setState({ items, groupName, allSelected })
         }
     }
@@ -71,7 +66,7 @@ export default class CustomDropdown extends Component {
                 <span style={{ fontSize: '30px', marginLeft: '5px' }}>{groupName}</span>
             </li>
             {items.map((eachItem) => <li
-                style={{ listStyleType: "none", marginLeft: '20px' }}
+                style={{ ...this.props.style, listStyleType: "none", marginLeft: '20px' }}
                 onClick={() => this.selectValue(eachItem)}>
                 <input type='checkbox' checked={eachItem.checked} readOnly />
                 <span style={{ fontSize: '30px', marginLeft: '5px' }}>{eachItem.item}</span>
