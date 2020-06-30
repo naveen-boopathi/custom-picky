@@ -3,38 +3,38 @@ import React, { Component, Fragment } from 'react'
 export default class CustomDropdown extends Component {
     state = {
         allSelected: 'none',
-        items: [],
-        groupName: ''
+        lteCoin: [],
+        region: ''
     }
     componentDidMount() {
         if (this.props.item) {
-            const { items, groupName, allSelected } = this.props.item
-            this.setState({ items, groupName, allSelected })
+            const { lteCoin, region, allSelected } = this.props.item
+            this.setState({ lteCoin, region, allSelected })
         }
     }
     componentWillReceiveProps(nextProps, nextState) {
-        if (this.props.item !== nextProps.item && this.state.groupName === nextProps.changedGroupName) {
-            const { items, groupName, allSelected } = nextProps.item
-            this.setState({ items, groupName, allSelected })
+        if (this.props.item !== nextProps.item && this.state.region === nextProps.changedRegion) {
+            const { lteCoin, region, allSelected } = nextProps.item
+            this.setState({ lteCoin, region, allSelected })
         }
     }
     shouldComponentUpdate(nextProps, nextState) {
-        if (this.state.items !== nextState.items) {
+        if (this.state.lteCoin !== nextState.lteCoin) {
             return true
-        } else if (this.state.groupName !== nextProps.changedGroupName) {
+        } else if (this.state.region !== nextProps.changedRegion) {
             return false
         }
         return true
     }
     selectAllClick = () => {
-        const { items, groupName, allSelected } = this.state
-        this.props.onGroupSelect(items, groupName, allSelected === 'all' ? 'none' : 'all')
+        const { lteCoin, region, allSelected } = this.state
+        this.props.onGroupSelect(lteCoin, region, allSelected === 'all' ? 'none' : 'all')
     }
     selectValue = (selectedItem) => {
         this.setState((prevState) => {
-            const length = prevState.items.length
+            const length = prevState.lteCoin.length
             let count = 0
-            const updatedItems = prevState.items.map(eachItem => {
+            const updatedItems = prevState.lteCoin.map(eachItem => {
                 if (eachItem.item === selectedItem.item) {
                     this.props.selectValue(selectedItem.item)
                     return { ...eachItem, checked: !selectedItem.checked }
@@ -47,25 +47,25 @@ export default class CustomDropdown extends Component {
                 }
             })
             if (count === length) {
-                return { allSelected: 'all', items: updatedItems }
+                return { allSelected: 'all', lteCoin: updatedItems }
             } else if (count === 0) {
-                return { allSelected: 'none', items: updatedItems }
+                return { allSelected: 'none', lteCoin: updatedItems }
             } else {
-                return { allSelected: 'partial', items: updatedItems }
+                return { allSelected: 'partial', lteCoin: updatedItems }
             }
         })
     }
     render() {
-        let { allSelected, items, groupName } = this.state
+        let { allSelected, lteCoin, region } = this.state
         return <Fragment>
             <li
                 style={{ ...this.props.style, listStyleType: "none" }}
                 onClick={this.selectAllClick}
             >
                 <input type='checkbox' className={allSelected === "partial" ? "regular-checkbox" : ""} checked={allSelected === 'none' ? false : true} readOnly />
-                <span style={{ fontSize: '30px', marginLeft: '5px' }}>{groupName}</span>
+                <span style={{ fontSize: '30px', marginLeft: '5px' }}>{region}</span>
             </li>
-            {items.map((eachItem) => <li
+            {lteCoin.map((eachItem) => <li
                 style={{ ...this.props.style, listStyleType: "none", marginLeft: '20px' }}
                 onClick={() => this.selectValue(eachItem)}>
                 <input type='checkbox' checked={eachItem.checked} readOnly />

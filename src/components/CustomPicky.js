@@ -5,13 +5,9 @@ import CustomDropdown from './CustomDropdown'
 
 export default class CustomPicky extends Component {
     state = {
-        options: [
-            { groupName: 'Fruits', items: [{ item: 'Apple', checked: false }, { item: 'Orange', checked: false }, { item: 'Grapes', checked: false }, { item: 'Watermelon', checked: false }] },
-            { groupName: 'Vegetables', items: [{ item: 'Brinjal', checked: false }, { item: 'Tomato', checked: false }, { item: 'Cauliflower', checked: false }, { item: 'Onion', checked: false }] },
-            { groupName: 'Spices', items: [{ item: 'Pattai', checked: false }, { item: 'Yelaka', checked: false }, { item: 'Cardamom', checked: false }, { item: 'Pepper', checked: false }] },
-        ],
+        options: [],
         selectedItems: [],
-        changedGroupName: '',
+        changedRegion: '',
     }
     componentDidMount() {
         if(this.props) {
@@ -25,9 +21,9 @@ export default class CustomPicky extends Component {
             this.setState({options, selectedItems})
         }
     }
-    handleGroupSelect = (items, groupName, type) => {
+    handleGroupSelect = (lteCoin, region, type) => {
         let { selectedItems, options } = this.state
-        items.forEach(eachItem => {
+        lteCoin.forEach(eachItem => {
             if(type === 'all' && eachItem.checked === false) {
                 selectedItems = [...selectedItems, eachItem.item]
             } else if(type === 'none' && eachItem.checked === true) {
@@ -35,19 +31,19 @@ export default class CustomPicky extends Component {
             }
         })
         const updatedOptions = options.map((eachOption) => {
-            if (eachOption.groupName === groupName) {
-                const updatedItems = eachOption.items.map((eachItem) => {
+            if (eachOption.region === region) {
+                const updatedItems = eachOption.lteCoin.map((eachItem) => {
                     if (type === 'all') {
                         return { ...eachItem, checked: true }
                     } else {
                         return { ...eachItem, checked: false }
                     }
                 })
-                return { ...eachOption, items: updatedItems, allSelected: type }
+                return { ...eachOption, lteCoin: updatedItems, allSelected: type }
             }
             return { ...eachOption }
         })
-        this.setState({selectedItems, changedGroupName: groupName, options: updatedOptions})
+        this.setState({selectedItems, changedRegion: region, options: updatedOptions})
     }
     render() {
         return <Fragment>
@@ -67,7 +63,7 @@ export default class CustomPicky extends Component {
                             {...props}
                             selectedItems={this.state.selectedItems}
                             onGroupSelect={this.handleGroupSelect}
-                            changedGroupName={this.state.changedGroupName}
+                            changedRegion={this.state.changedRegion}
                         />
                     );
                 }}
