@@ -12,19 +12,19 @@ class App extends Component {
   }
   generateOptions() {
     const options = [
-      { groupName: 'Fruits', items: [{ item: 'Apple' }, { item: 'Orange' }, { item: 'Grapes' }, { item: 'Watermelon' }] },
-      { groupName: 'Vegetables', items: [{ item: 'Brinjal' }, { item: 'Tomato' }, { item: 'Cauliflower' }, { item: 'Onion' }] },
-      { groupName: 'Spices', items: [{ item: 'Pattai' }, { item: 'Yelaka' }, { item: 'Cardamom' }, { item: 'Pepper' }] },
+      { groupName: 'Fruits', items: ['Apple', 'Orange', 'Grapes', 'Watermelon'] },
+      { groupName: 'Vegetables', items: ['Brinjal', 'Tomato', 'Cauliflower', 'Onion'] },
+      { groupName: 'Spices', items: ['Pattai', 'Yelaka', 'Cardamom', 'Pepper'] },
     ]
     const { selectedItems } = this.state
     const updatedOptions = options.map((eachOption) => {
       const length = eachOption.items.length
       let count = 0
       const updatedItems = eachOption.items.map((eachItem) => {
-        if (selectedItems.indexOf(eachItem.item) !== -1) {
-          return { ...eachItem, checked: true }
+        if (selectedItems.indexOf(eachItem) !== -1) {
+          return { item: eachItem, checked: true }
         } else {
-          return { ...eachItem, checked: false }
+          return { item: eachItem, checked: false }
         }
       })
       updatedItems.forEach((eachItem) => {
@@ -35,15 +35,16 @@ class App extends Component {
       if (count === length) {
         return { ...eachOption, allSelected: 'all', items: updatedItems }
       } else if (count === 0) {
-        return { ...eachOption, allSelected: 'none', items: updatedItems  }
+        return { ...eachOption, allSelected: 'none', items: updatedItems }
       } else {
-        return { ...eachOption, allSelected: 'partial', items: updatedItems  }
+        return { ...eachOption, allSelected: 'partial', items: updatedItems }
       }
     })
-    this.setState({options: updatedOptions})
+    console.log(updatedOptions)
+    this.setState({ options: updatedOptions })
   }
   render() {
-    return <CustomPicky options={this.state.options} selectedItems={this.state.selectedItems}/>
+    return <CustomPicky options={this.state.options} selectedItems={this.state.selectedItems} />
   }
 }
 
