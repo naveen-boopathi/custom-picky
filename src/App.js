@@ -5,12 +5,20 @@ import CustomPicky from './components/CustomPicky'
 class App extends Component {
   state = {
     options: [],
-    selectedItems: ['New Jersey', 'Michigan', 'LAB', 'Central Texas']
+    selectedItems: ['New Jersey', 'Michigan', 'LAB', 'Central Texas'],
+    totalCount: 0
   }
   componentDidMount() {
     this.generateOptions()
   }
-  generateOptions() {
+  findTotalCount = (options, key) => {
+    let count = 0
+    options.forEach(eachOption => {
+      count = count + eachOption[key].length
+    })
+    return count
+  }
+  generateOptions = () => {
     const options = [
       {
         region: "Carolinas/Tennessee",
@@ -170,6 +178,7 @@ class App extends Component {
         ]
       }
     ]
+    const totalCount = this.findTotalCount(options, 'lteCoin')
     const { selectedItems } = this.state
     const updatedOptions = options.map((eachOption) => {
       const length = eachOption.lteCoin.length
@@ -195,10 +204,14 @@ class App extends Component {
       }
     })
     console.log(updatedOptions)
-    this.setState({ options: updatedOptions })
+    this.setState({ options: updatedOptions, totalCount })
   }
   render() {
-    return <CustomPicky options={this.state.options} selectedItems={this.state.selectedItems} />
+    return <CustomPicky
+      options={this.state.options}
+      selectedItems={this.state.selectedItems}
+      totalCount={this.state.totalCount}
+    />
   }
 }
 

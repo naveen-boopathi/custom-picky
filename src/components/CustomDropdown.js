@@ -13,63 +13,66 @@ export default class CustomDropdown extends Component {
         }
     }
     componentWillReceiveProps(nextProps, nextState) {
-        if (this.props.item !== nextProps.item && this.state.region === nextProps.changedRegion) {
+        if (this.props.item !== nextProps.item) {
             const { lteCoin, region, allSelected } = nextProps.item
             this.setState({ lteCoin, region, allSelected })
         }
     }
-    shouldComponentUpdate(nextProps, nextState) {
-        if (this.state.lteCoin !== nextState.lteCoin) {
-            return true
-        } else if (this.state.region !== nextProps.changedRegion) {
-            return false
-        }
-        return true
-    }
     selectAllClick = () => {
         const { lteCoin, region, allSelected } = this.state
-        this.props.onGroupSelect(lteCoin, region, allSelected === 'all' ? 'none' : 'all')
-    }
-    selectValue = (selectedItem) => {
-        this.setState((prevState) => {
-            const length = prevState.lteCoin.length
-            let count = 0
-            const updatedItems = prevState.lteCoin.map(eachItem => {
-                if (eachItem.item === selectedItem.item) {
-                    this.props.selectValue(selectedItem.item)
-                    return { ...eachItem, checked: !selectedItem.checked }
-                }
-                return { ...eachItem }
-            })
-            updatedItems.forEach((eachItem) => {
-                if (eachItem.checked) {
-                    count = count + 1
-                }
-            })
-            if (count === length) {
-                return { allSelected: 'all', lteCoin: updatedItems }
-            } else if (count === 0) {
-                return { allSelected: 'none', lteCoin: updatedItems }
+        let type = 'none'
+        const updatedLteCoin = lteCoin.map((eachLteCoin) => {
+            if (allSelected === 'all') {
+                type = 'none'
+                return { ...eachLteCoin, checked: false }
             } else {
-                return { allSelected: 'partial', lteCoin: updatedItems }
+                type = 'all'
+                return { ...eachLteCoin, checked: true }
             }
         })
+        this.props.onGroupSelect(updatedLteCoin, region, type)
+    }
+    selectValue = (selectedItem) => {
+        const { lteCoin, region } = this.state
+        const length = lteCoin.length
+        let count = 0, type = 'none'
+        const updatedLteCoin = lteCoin.map((eachLteCoin) => {
+            if (eachLteCoin.item === selectedItem.item) {
+                return { ...eachLteCoin, checked: !selectedItem.checked }
+            }
+            return { ...eachLteCoin }
+        })
+        updatedLteCoin.forEach((eachLteCoin) => {
+            if (eachLteCoin.checked) {
+                count = count + 1
+            }
+        })
+        if (count === length) {
+            type = 'all'
+        } else if (count === 0) {
+            type = 'none'
+        } else {
+            type = 'partial'
+        }
+        this.props.onGroupSelect(updatedLteCoin, region, type)
     }
     render() {
         let { allSelected, lteCoin, region } = this.state
         return <Fragment>
             <li
-                style={{ ...this.props.style, listStyleType: "none" }}
+                key={this.props.key}
+                style={{ listStyleType: "none", fontWeight: 'bold', borderTop: '1px solid #eee' }}
                 onClick={this.selectAllClick}
             >
                 <input type='checkbox' className={allSelected === "partial" ? "regular-checkbox" : ""} checked={allSelected === 'none' ? false : true} readOnly />
-                <span style={{ fontSize: '30px', marginLeft: '5px' }}>{region}</span>
+                <span>{region}</span>
             </li>
-            {lteCoin.map((eachItem) => <li
-                style={{ ...this.props.style, listStyleType: "none", marginLeft: '20px' }}
-                onClick={() => this.selectValue(eachItem)}>
-                <input type='checkbox' checked={eachItem.checked} readOnly />
-                <span style={{ fontSize: '30px', marginLeft: '5px' }}>{eachItem.item}</span>
+            {lteCoin.map((eachLteCoin) => <li
+                key={eachLteCoin.item + this.props.key}
+                style={{ listStyleType: "none", marginLeft: '20px', borderBottom: '0px' }}
+                onClick={() => this.selectValue(eachLteCoin)}>
+                <input type='checkbox' checked={eachLteCoin.checked} />
+                <span>{eachLteCoin.item}</span>
             </li>)}
         </Fragment>
     }
