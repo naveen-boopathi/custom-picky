@@ -12,13 +12,13 @@ export default class CustomDropdown extends Component {
             this.setState({ lteCoin, region, allSelected })
         }
     }
-    componentWillReceiveProps(nextProps, nextState) {
+    componentWillReceiveProps(nextProps) {
         if (this.props.item !== nextProps.item) {
             const { lteCoin, region, allSelected } = nextProps.item
             this.setState({ lteCoin, region, allSelected })
         }
     }
-    selectAllClick = () => {
+    handleSelectAll = () => {
         const { lteCoin, region, allSelected } = this.state
         let type = 'none'
         const updatedLteCoin = lteCoin.map((eachLteCoin) => {
@@ -32,7 +32,7 @@ export default class CustomDropdown extends Component {
         })
         this.props.onGroupSelect(updatedLteCoin, region, type)
     }
-    selectValue = (selectedItem) => {
+    handleSelect = (selectedItem) => {
         const { lteCoin, region } = this.state
         const length = lteCoin.length
         let count = 0, type = 'none'
@@ -60,17 +60,17 @@ export default class CustomDropdown extends Component {
         let { allSelected, lteCoin, region } = this.state
         return <Fragment>
             <li
-                key={this.props.key}
+                key={this.props.id}
                 style={{ listStyleType: "none", fontWeight: 'bold', borderTop: '1px solid #eee' }}
-                onClick={this.selectAllClick}
+                onClick={this.handleSelectAll}
             >
-                <input type='checkbox' className={allSelected === "partial" ? "regular-checkbox" : ""} checked={allSelected === 'none' ? false : true} readOnly />
+                <input type='checkbox' className={allSelected === "partial" ? "partial-checkbox" : ""} checked={allSelected === 'none' ? false : true} readOnly />
                 <span>{region}</span>
             </li>
             {lteCoin.map((eachLteCoin) => <li
-                key={eachLteCoin.item + this.props.key}
+                key={eachLteCoin.item + this.props.id}
                 style={{ listStyleType: "none", marginLeft: '20px', borderBottom: '0px' }}
-                onClick={() => this.selectValue(eachLteCoin)}>
+                onClick={() => this.handleSelect(eachLteCoin)}>
                 <input type='checkbox' checked={eachLteCoin.checked} />
                 <span>{eachLteCoin.item}</span>
             </li>)}

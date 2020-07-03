@@ -16,7 +16,7 @@ export default class CustomPicky extends Component {
             this.setState({ options, selectedItems })
         }
     }
-    componentWillReceiveProps(nextProps, nextState) {
+    componentWillReceiveProps(nextProps) {
         if (this.props !== nextProps) {
             const { options, selectedItems } = nextProps
             this.setState({ options, selectedItems })
@@ -51,14 +51,14 @@ export default class CustomPicky extends Component {
         }
         this.setState({ selectedItems, options: updatedOptions, filteredOptions: updatedFilterOptions })
     }
-    customFilter = (term, key) => {
+    doFilter = (term, key) => {
         const filteredOptions = this.state.options.filter((eachOption) => {
             return String(eachOption[key]).toLowerCase().indexOf(String(term).toLowerCase()) > -1
         })
         const isFiltered = term ? true : false
         this.setState({ filteredOptions, isFiltered })
     }
-    onSelectAllClick = () => {
+    handleSelectAll = () => {
         let {selectedItems, options} = this.state
         let updatedOptions = [], updatedLteCoin = []
         if(this.props.totalCount === selectedItems.length) {
@@ -83,6 +83,7 @@ export default class CustomPicky extends Component {
     }
     render() {
         const { options, selectedItems, filteredOptions, isFiltered } = this.state
+        const { totalCount } = this.props
         return <Fragment>
             <Picky
                 id="picky"
@@ -91,10 +92,10 @@ export default class CustomPicky extends Component {
                 multiple={true}
                 includeSelectAll={true}
                 includeFilter={true}
-                labelKey={"region"}
-                valueKey={"lteCoin"}
+                labelKey="region"
+                valueKey="lteCoin"
                 filterTermProcessor={(term) => {
-                    this.customFilter(term, 'region')
+                    this.doFilter(term, 'region')
                     return ''
                 }}
                 onChange={(selectedItems) => this.setState({ selectedItems })}
@@ -103,27 +104,27 @@ export default class CustomPicky extends Component {
                     const items = isFiltered ? filteredOptions : options
                     return items.map(item =>
                         <CustomDropdown
+                            id={item.region}
                             item={item}
-                            key={item.region}
                             onGroupSelect={this.handleGroupSelect}
                         />)
                     }
                 }
-                renderSelectAll={(props) => {
+                renderSelectAll={() => {
                     let allSelected = 'partial'
-                    if(this.props.totalCount === selectedItems.length) {
+                    if(totalCount === selectedItems.length) {
                         allSelected = 'all'
                     } else if(selectedItems.length === 0) {
                         allSelected = 'none'
                     } else {
                         allSelected = 'partial'
                     }
-                    return isFiltered ? <Fragment></Fragment> : <Fragment>
-                        <li style={{cursor: 'pointer'}} onClick={this.onSelectAllClick}>
+                    return !isFiltered && <Fragment>
+                        <li style={{cursor: 'pointer'}} onClick={this.handleSelectAll}>
                             <input 
                                 id='selectall' 
                                 type='checkbox' 
-                                className={allSelected === 'partial' ? 'regular-checkbox' : ''}
+                                className={allSelected === 'partial' ? 'partial-checkbox' : ''}
                                 checked={allSelected === 'none' ? false : true}
                             />
                             <span>Select All</span>

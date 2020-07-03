@@ -30,7 +30,7 @@ a {
 .btn:hover {
   background: #666;
 }
-.regular-checkbox {
+.partial-checkbox {
   -webkit-appearance: none;
   background-color: #fafafa;
   border: 1px solid #757575;
@@ -41,7 +41,7 @@ a {
   position: relative;
 }
 
-.regular-checkbox:checked:after {
+.partial-checkbox:checked:after {
   content: '\2212';
   font-size: 14px;
   position: absolute;
